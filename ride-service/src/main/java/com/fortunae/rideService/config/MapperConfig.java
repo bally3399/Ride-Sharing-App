@@ -1,4 +1,4 @@
-package com.fortunae.userservice.config;
+package com.fortunae.rideService.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,5 @@ public class MapperConfig {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
-
 }
 

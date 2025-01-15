@@ -52,7 +52,5 @@ public class RegisterDriverRequest {
     @NotEmpty(message = "Vehicle color must not be empty")
     private String vehicleColor;
 
-    @NotBlank()
-    @NotEmpty()
     private boolean available;
 }

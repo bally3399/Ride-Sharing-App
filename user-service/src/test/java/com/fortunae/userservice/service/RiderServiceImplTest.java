@@ -1,30 +1,30 @@
 package com.fortunae.userservice.service;
 
-import com.fortunae.userservice.dtos.request.RegisterDriverRequest;
+import com.fortunae.userservice.dtos.request.LoginRequest;
 import com.fortunae.userservice.dtos.request.RegisterRiderRequest;
 import com.fortunae.userservice.dtos.response.GetUserResponse;
-import com.fortunae.userservice.dtos.response.RegisterDriverResponse;
+import com.fortunae.userservice.dtos.response.LoginResponse;
 import com.fortunae.userservice.dtos.response.RegisterUserResponse;
 import com.fortunae.userservice.exceptions.InvalidDetailsException;
+import com.fortunae.userservice.exceptions.NotFoundException;
 import com.fortunae.userservice.exceptions.UserExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.fortunae.userservice.model.Role.DRIVER;
 import static com.fortunae.userservice.model.Role.RIDER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class UserServiceImplTest {
+public class RiderServiceImplTest {
     @Autowired
-    private UserService userService;
+    private RiderService userService;
     private RegisterUserResponse response;
-    private RegisterDriverResponse driverResponse;
+
     private RegisterRiderRequest userRequest;
-    private RegisterDriverRequest driverRequest;
+    private LoginResponse loginResponse;
 
 
     @BeforeEach
@@ -33,26 +33,21 @@ public class UserServiceImplTest {
 
         userRequest = new RegisterRiderRequest();
         userRequest.setFirstName("Rider");
-        userRequest.setLastName("Timi");
-        userRequest.setEmail("timi@fortunae.com");
+        userRequest.setLastName("John");
+        userRequest.setEmail("john@fortunae.com");
         userRequest.setPassword("Password@1234");
         userRequest.setPhoneNumber("08122233333");
+        userRequest.setUsername("JohnDoe");
         userRequest.setRole(RIDER);
         userRequest.setPreferredPaymentMethod("Bank transfer");
         response = userService.registerUser(userRequest);
 
-        driverRequest = new RegisterDriverRequest();
-        driverRequest.setEmail("temi@fortunae.com");
-        driverRequest.setPassword("Password@1234");
-        driverRequest.setFirstName("Temi");
-        driverRequest.setPhoneNumber("09012345678");
-        driverRequest.setLastName("Timi");
-        driverRequest.setRole(DRIVER);
-        driverRequest.setAvailable(true);
-        driverRequest.setVehicleColor("white");
-        driverRequest.setVehicleModel("2020");
-        driverRequest.setLicensePlate("MNt112");
-        driverResponse = userService.registerDriver(driverRequest);
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("john@fortunae.com");
+        loginRequest.setPassword("Password@1234");
+        loginResponse = userService.login(loginRequest);
+
+
     }
     @Test
     public void registerRiderTest(){
@@ -60,11 +55,6 @@ public class UserServiceImplTest {
         assertThat(response.getMessage()).isEqualTo("Rider registered successfully");
     }
 
-    @Test
-    public void registerDriverTest(){
-        assertNotNull(driverResponse);
-        assertThat(driverResponse.getMessage()).isEqualTo("Driver registered successfully");
-    }
 
     @Test
     public void findRider(){
@@ -78,33 +68,38 @@ public class UserServiceImplTest {
     }
 
 
-    @Test
-    public void getDriver(){
-        GetUserResponse user = userService.getUser(driverResponse.getEmail());
 
-        assertThat(user.getEmail()).isEqualTo(driverResponse.getEmail());
-        assertThat(user.getFirstName()).isEqualTo(driverResponse.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(driverResponse.getLastName());
-        assertThat(user.getPhoneNumber()).isEqualTo(driverResponse.getPhoneNumber());
-        assertThat(user.getId()).isNotNull();
-    }
 
     @Test
-    void testRegisterUserWithExistingEmail() {
+    public void testRegisterUserWithExistingEmail() {
         assertThrows(UserExistsException.class, () -> userService.registerUser(userRequest));
     }
 
     @Test
-    void testRegisterUserWithIncorrectEmail() {
+    public void testRegisterUserWithIncorrectEmail() {
         RegisterRiderRequest user = new RegisterRiderRequest();
         user.setEmail("badEmail.com");
         assertThrows(InvalidDetailsException.class, () -> userService.registerUser(user));
     }
     @Test
-    void testRegisterUserWithBadPassword() {
+    public void testRegisterUserWithBadPassword() {
         RegisterRiderRequest user = new RegisterRiderRequest();
         user.setPassword("badpassword");
         assertThrows(InvalidDetailsException.class, () -> userService.registerUser(user));
     }
+
+    @Test
+    public void testDeleteUser() {
+        System.out.println(userRequest);
+
+        userService.deleteUser(response.getEmail());
+        assertThrows(NotFoundException.class, ()-> userService.deleteUser(response.getEmail()));
+    }
+
+    @Test
+    public void testThatCanLogin(){
+        assertThat(loginResponse).isNotNull();
+    }
+
 
 }

@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static jakarta.persistence.GenerationType.UUID;
 import static java.time.LocalDateTime.now;
 
@@ -18,10 +19,10 @@ import static java.time.LocalDateTime.now;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "drivers")
+public class Driver {
     @Id
-    @GeneratedValue(strategy = UUID)
+    @GeneratedValue(strategy =UUID)
     private String id;
     private String firstName;
     private String username;
@@ -29,14 +30,13 @@ public class User {
     private String email;
     private String phoneNumber;
     private String password;
-    private Role role;
 
-    private String preferredPaymentMethod;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String vehicleModel;
     private String licensePlate;
     private String vehicleColor;
     private boolean available;
-
     @Setter(AccessLevel.NONE)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -58,3 +58,8 @@ public class User {
         timeUpdated=now();
     }
 }
+
+
+
+
+
