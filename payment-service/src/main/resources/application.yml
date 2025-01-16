@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: payment-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/payment_db
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+  config:
+    import: classpath:secrets.properties
+server:
+  port: 8083

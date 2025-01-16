@@ -1,5 +1,7 @@
 package com.fortunae.rideService.dtos.response;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,14 +11,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RideBookingResponse {
+public class RideResponse {
     private String rideId;
     private String riderId;
     private String driverId;
     private String pickupLocation;
     private String dropLocation;
+    @Enumerated(EnumType.STRING)
     private String status;
-    private String message;
+//    private String message;
     private BigDecimal price;
 
 }

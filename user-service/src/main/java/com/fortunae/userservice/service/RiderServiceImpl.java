@@ -5,6 +5,7 @@ import com.fortunae.userservice.dtos.request.RegisterRiderRequest;
 import com.fortunae.userservice.dtos.response.GetUserResponse;
 import com.fortunae.userservice.dtos.response.LoginResponse;
 import com.fortunae.userservice.dtos.response.RegisterUserResponse;
+import com.fortunae.userservice.dtos.response.RideResponse;
 import com.fortunae.userservice.exceptions.InvalidDetailsException;
 import com.fortunae.userservice.exceptions.NotFoundException;
 import com.fortunae.userservice.exceptions.UserExistsException;
@@ -12,21 +13,36 @@ import com.fortunae.userservice.model.Rider;
 import com.fortunae.userservice.repository.RiderRepository;
 import com.fortunae.userservice.utils.JwtUtils;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.fortunae.userservice.utils.ValidationUtils.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class RiderServiceImpl implements RiderService {
     private final ModelMapper modelMapper;
     private final RiderRepository riderRepository;
+
+    @Value("${ride-service-url}")
+    String rideServiceUrl;
+
+    @Autowired
+    private WebClient webClient;
+
 
     @Override
     public RegisterUserResponse registerUser(RegisterRiderRequest request) {
@@ -107,6 +123,29 @@ public class RiderServiceImpl implements RiderService {
         loginResponse.setRole(rider.getRole().toString());
         return loginResponse;
     }
+
+
+//    @Override
+//    public List<RideResponse> getRidesForUser(String userId) {
+//        String url = String.format(rideServiceUrl + "", userId);
+//
+//        RideResponse[] rides = webClient
+//                .get()
+//                .uri(url)
+//                .retrieve()
+//                .onStatus(
+//                        HttpStatusCode::is4xxClientError,
+//                        response -> Mono.error(new RuntimeException("No rides found for user: " + userId))
+//                )
+//                .onStatus(
+//                        HttpStatusCode::is5xxServerError,
+//                        response -> Mono.error(new RuntimeException("Ride-service is unavailable"))
+//                )
+//                .bodyToMono(RideResponse[].class)
+//                .block();
+//
+//        return Arrays.asList(rides);
+//    }
 
 
 }

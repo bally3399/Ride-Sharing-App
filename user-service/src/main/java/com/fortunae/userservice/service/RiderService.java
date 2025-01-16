@@ -5,7 +5,10 @@ import com.fortunae.userservice.dtos.request.RegisterRiderRequest;
 import com.fortunae.userservice.dtos.response.GetUserResponse;
 import com.fortunae.userservice.dtos.response.LoginResponse;
 import com.fortunae.userservice.dtos.response.RegisterUserResponse;
+import com.fortunae.userservice.dtos.response.RideResponse;
 import com.fortunae.userservice.model.Rider;
+
+import java.util.List;
 
 public interface RiderService {
     RegisterUserResponse registerUser(RegisterRiderRequest request);
@@ -19,7 +22,7 @@ public interface RiderService {
 
     LoginResponse login(LoginRequest loginRequest);
 
-//    LoginResponse loginUser(LoginRequest loginRequest);
-//    UpdateUserResponse updateUser(UpdateUserRequest request);
+//    List<RideResponse> getRidesForUser(String userId);
+
 
 }

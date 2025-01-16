@@ -1,6 +1,6 @@
 package com.fortunae.rideService.exception;
 
-public class RiderNotFoundException extends RuntimeException{
+public class RiderNotFoundException extends RideExceptions{
     public RiderNotFoundException(String riderNotFound) {
         super(riderNotFound);
     }

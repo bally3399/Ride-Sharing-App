@@ -2,8 +2,8 @@ package com.fortunae.rideService.service;
 
 import com.fortunae.rideService.dtos.requests.CancelRideRequest;
 import com.fortunae.rideService.dtos.requests.RideBookingRequest;
-import com.fortunae.rideService.dtos.response.CancelRideResponse;
-import com.fortunae.rideService.dtos.response.RideBookingResponse;
+import com.fortunae.rideService.dtos.response.RideResponse;
+import com.fortunae.rideService.exception.RideAlreadyAcceptedException;
 import com.fortunae.rideService.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,39 +13,60 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class RideServiceImplTest {
     @Autowired
     private RideService rideService;
-    private RideBookingResponse rideBookingResponse;
+    private RideResponse rideResponse;
 
     @BeforeEach
     public void setUp(){
         RideBookingRequest rideBookingRequest = new RideBookingRequest();
-        rideBookingRequest.setRiderId("4bd0fb8a-c563-4cad-a000-fe3a568542e7");
-        rideBookingRequest.setDriverId("2bea320d-b28b-4cbf-a193-1ecabbd92f5f");
+        rideBookingRequest.setRiderId("bb304bd4-6612-4eea-a709-b31f627c205d");
+        rideBookingRequest.setDriverId("222ad69f-57e7-47ea-8582-fe7dcd4bc869");
         rideBookingRequest.setPickupLocation("Mary land");
         rideBookingRequest.setStatus(Status.PENDING);
         rideBookingRequest.setPrice(new BigDecimal(5000));
-        rideBookingRequest.setDropLocation("Lagos");
-        rideBookingResponse = rideService.bookRide(rideBookingRequest);
+        rideBookingRequest.setDropLocation("Bariga");
+        rideResponse = rideService.bookRide(rideBookingRequest);
     }
     @Test
     public void RiderCanBookRide(){
 
-        assertThat(rideBookingResponse.getMessage()).isEqualTo("Ride Booked Successful");
+        assertThat(rideResponse.getPickupLocation()).isEqualTo("Mary land");
     }
 
     @Test
     public void RiderCanUnBookRide(){
+        String id = rideResponse.getRideId();
+        RideResponse response = rideService.cancelRide(id);
+        assertThat(response.getRideId()).isEqualTo(id);
 
-        CancelRideRequest cancelRideRequest = new CancelRideRequest();
-        cancelRideRequest.setRideId(rideBookingResponse.getRideId());
-        cancelRideRequest.setRiderId("4bd0fb8a-c563-4cad-a000-fe3a568542e7");
-        CancelRideResponse response = rideService.cancelRide(cancelRideRequest);
-        assertThat(response.getMessage()).isEqualTo("Ride Cancelled");
+    }
+    @Test
+    public void acceptRideTest(){
+        String id = rideResponse.getRideId();
+        RideResponse response = rideService.acceptRide(id);
+        assertThat(response.getRideId()).isEqualTo(id);
+    }
+    @Test
+    public void acceptNonExistentRideTest() {
+        String invalidId = "non-existent-id";
 
+        assertThatThrownBy(() -> rideService.acceptRide(invalidId))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Ride not found");
+    }
 
+    @Test
+    public void acceptAlreadyAcceptedRideTest() {
+        String id = rideResponse.getRideId();
+        rideService.acceptRide(id);
+
+        assertThatThrownBy(() -> rideService.acceptRide(id))
+                .isInstanceOf(RideAlreadyAcceptedException.class)
+                .hasMessage(String.format("Ride with ID %s is already accepted", id));
     }
 }
