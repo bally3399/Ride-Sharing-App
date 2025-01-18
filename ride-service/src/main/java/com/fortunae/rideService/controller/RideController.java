@@ -1,6 +1,5 @@
 package com.fortunae.rideService.controller;
 
-import com.fortunae.rideService.dtos.requests.CancelRideRequest;
 import com.fortunae.rideService.dtos.requests.RideBookingRequest;
 import com.fortunae.rideService.dtos.response.RideResponse;
 import com.fortunae.rideService.model.Ride;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/rides")
@@ -30,12 +30,12 @@ public class RideController {
     }
 
     @PostMapping("/{rideId}")
-    public ResponseEntity<RideResponse> cancelRide(@PathVariable String rideId) {
+    public ResponseEntity<RideResponse> cancelRide(@PathVariable("rideId") String rideId) {
         RideResponse response = rideService.cancelRide(rideId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @PostMapping("/{rideId}/ride")
-    public ResponseEntity<RideResponse> acceptRide(@PathVariable String rideId) {
+    public ResponseEntity<RideResponse> acceptRide(@PathVariable("rideId") String rideId) {
         RideResponse response = rideService.acceptRide(rideId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -46,5 +46,10 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/{rideId}/pay")
+    public ResponseEntity<RideResponse> completeRide(@PathVariable("rideId") String rideId){
+        RideResponse response = rideService.completeRide(rideId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }

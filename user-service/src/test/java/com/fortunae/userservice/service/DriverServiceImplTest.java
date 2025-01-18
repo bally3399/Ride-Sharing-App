@@ -57,6 +57,7 @@ public class DriverServiceImplTest {
     public void registerDriverTest(){
         assertNotNull(driverResponse);
         assertThat(driverResponse.getMessage()).isEqualTo("Driver registered successfully");
+        System.out.println(driverResponse);
     }
 
     @Test

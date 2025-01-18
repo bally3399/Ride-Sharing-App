@@ -11,4 +11,4 @@ spring:
   config:
     import: classpath:secrets.properties
 server:
-  port: 8083
+  port: 8084

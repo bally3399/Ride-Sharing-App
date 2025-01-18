@@ -53,6 +53,7 @@ public class RiderServiceImplTest {
     public void registerRiderTest(){
         assertNotNull(response);
         assertThat(response.getMessage()).isEqualTo("Rider registered successfully");
+        System.out.println(response);
     }
 
 

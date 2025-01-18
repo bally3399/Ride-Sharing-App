@@ -14,5 +14,9 @@ public interface RideService {
 
     RideResponse acceptRide(String rideId);
 
-    List<Ride> viewAllRides(String userId);
+//    List<Ride> viewAllRides(String userId);
+
+    List<Ride> viewAllRides(String riderId);
+
+    RideResponse completeRide(String rideId);
 }

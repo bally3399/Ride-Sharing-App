@@ -1,10 +1,9 @@
 package com.fortunae.userservice.controller;
 
-import com.fortunae.userservice.dtos.request.RegisterDriverRequest;
+import com.fortunae.userservice.dtos.request.LoginRequest;
 import com.fortunae.userservice.dtos.request.RegisterRiderRequest;
-import com.fortunae.userservice.dtos.response.FindByIdResponse;
 import com.fortunae.userservice.dtos.response.GetUserResponse;
-import com.fortunae.userservice.dtos.response.RegisterDriverResponse;
+import com.fortunae.userservice.dtos.response.LoginResponse;
 import com.fortunae.userservice.dtos.response.RegisterUserResponse;
 import com.fortunae.userservice.model.Rider;
 import com.fortunae.userservice.service.RiderService;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/users")
 @Slf4j
 @RequiredArgsConstructor
-public class UserController {
+public class RiderController {
     private final RiderService userService;
 
     @PostMapping("/registerRider")
@@ -48,6 +47,11 @@ public class UserController {
        Rider rider = userService.getRiderById(id);
        return ResponseEntity.ok(rider);
 
+    }
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse response = userService.login(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

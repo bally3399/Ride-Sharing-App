@@ -24,8 +24,8 @@ public class RideServiceImplTest {
     @BeforeEach
     public void setUp(){
         RideBookingRequest rideBookingRequest = new RideBookingRequest();
-        rideBookingRequest.setRiderId("bb304bd4-6612-4eea-a709-b31f627c205d");
-        rideBookingRequest.setDriverId("222ad69f-57e7-47ea-8582-fe7dcd4bc869");
+        rideBookingRequest.setRiderId("9915b560-0031-4252-b7f9-35acf7f5788a");
+        rideBookingRequest.setDriverId("14b4efe2-293e-497c-8910-21c971c57a3c");
         rideBookingRequest.setPickupLocation("Mary land");
         rideBookingRequest.setStatus(Status.PENDING);
         rideBookingRequest.setPrice(new BigDecimal(5000));
