@@ -1,5 +1,6 @@
 package com.fortunae.paymentService.controller;
 
+import com.fortunae.paymentService.dtos.requests.InitialisePaymentRequest;
 import com.fortunae.paymentService.dtos.response.InitialisePaymentResponse;
 import com.fortunae.paymentService.dtos.response.VerifyPaymentResponse;
 import com.fortunae.paymentService.service.PaymentService;
@@ -21,10 +22,9 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/initialise")
-    public ResponseEntity<InitialisePaymentResponse> initialisePayment(
-            @RequestParam String email,
-            @RequestParam BigDecimal amount) {
-        InitialisePaymentResponse response = paymentService.initialisePayment(email, amount);
+    public ResponseEntity<InitialisePaymentResponse> initialisePayment(@RequestBody InitialisePaymentRequest initialisePaymentRequest) {
+        InitialisePaymentResponse response = paymentService.initialisePayment(initialisePaymentRequest.getEmail(),
+                initialisePaymentRequest.getAmount());
         return ResponseEntity.ok(response);
     }
 
